@@ -1,150 +1,177 @@
-<div class="calculator">
-    <h2>Home Insurance Calculator</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Insurance Calculator</title>
+    
+    <!-- Load Poppins from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
-    <label for="sqft">Enter Your Home's Square Footage:</label>
-    <input type="number" id="sqft" placeholder="e.g. 1500">
-
-    <label>Industry Standard Rate:</label>
-    <div class="output-box">€220 per sq. ft</div>
-
-    <label for="coverage">Your Insurance Coverage (%):</label>
-    <input type="range" min="0" max="100" value="100" class="slider" id="coverage">
-    <output id="coverageValue">100%</output>
-
-    <label>Estimated Rebuild Cost:</label>
-    <div class="output-box" id="totalCost">€0</div>
-
-    <label>Your Insurance Payout:</label>
-    <div class="output-box" id="insurancePayout">€0</div>
-
-    <label>Out-of-Pocket Expense:</label>
-    <div class="output-box" id="outOfPocket">€0</div>
-
-    <div class="footer">Ensure your insurance covers the full rebuild cost.</div>
-</div>
-
-<style>
-    :root {
-        --mainColour: #CDE730;
-        --secondaryColour: #0056b3;
-        --tertiaryColour: #0056b3;
-    }
-
-    .calculator {
-        background: #fff;
-        padding: 40px 20px;
-        border-radius: 10px;
-        max-width: 400px;
-        margin: 40px auto;
-        box-shadow: 0px 4px 10px rgba(0, 86, 179, 0.3);
-        border: 2px solid var(--secondaryColour);
-    }
-
-    h2 {
-        font-size: 22px;
-        color: var(--tertiaryColour);
-        text-align: center;
-    }
-
-    label {
-        display: block;
-        margin: 15px 0 5px;
-        font-size: 16px;
-        color: var(--secondaryColour);
-        font-weight: bold;
-    }
-
-    input, output {
-        width: 100%;
-        padding: 10px;
-        font-size: 18px;
-        border: 1px solid var(--secondaryColour);
-        border-radius: 5px;
-    }
-
-    input[type="number"] {
-        background: white;
-        color: black;
-        text-align: center;
-        font-weight: bold;
-    }
-
-    .slider {
-        -webkit-appearance: none;
-        width: 100%;
-        height: 8px;
-        background: var(--tertiaryColour);
-        outline: none;
-        border-radius: 5px;
-    }
-
-    /* Slider Thumb */
-    .slider::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 20px;
-        height: 20px;
-        background: var(--mainColour);
-        border-radius: 50%;
-        cursor: pointer;
-        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
-    }
-
-    .slider::-moz-range-thumb {
-        width: 20px;
-        height: 20px;
-        background: var(--mainColour);
-        border-radius: 50%;
-        cursor: pointer;
-        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
-    }
-
-    .output-box {
-        font-size: 22px;
-        font-weight: bold;
-        margin-top: 10px;
-        padding: 10px;
-        border-radius: 5px;
-        background: var(--mainColour);
-        color: #000;
-        text-align: center;
-    }
-
-    .footer {
-        margin-top: 10px;
-        font-size: 14px;
-        color: #666;
-        text-align: center;
-    }
-</style>
-
-<script>
-    (function() {
-        function calculateCost() {
-            let sqft = document.getElementById("sqft").value;
-            let coverage = document.getElementById("coverage").value;
-            let rate = 220;
-
-            if (sqft <= 0 || isNaN(sqft)) {
-                document.getElementById("totalCost").innerText = "€0";
-                document.getElementById("insurancePayout").innerText = "€0";
-                document.getElementById("outOfPocket").innerText = "€0";
-                return;
-            }
-
-            let totalCost = sqft * rate;
-            let insurancePayout = (totalCost * coverage) / 100;
-            let outOfPocket = totalCost - insurancePayout;
-
-            document.getElementById("coverageValue").innerText = coverage + "%";
-            document.getElementById("totalCost").innerText = "€" + totalCost.toLocaleString();
-            document.getElementById("insurancePayout").innerText = "€" + insurancePayout.toLocaleString();
-            document.getElementById("outOfPocket").innerText = "€" + outOfPocket.toLocaleString();
+    <style>
+        :root {
+            --mainColour: #CDE730;
+            --secondaryColour: #0056b3;
+            --tertiaryColour: #0056b3;
         }
 
-        document.addEventListener("DOMContentLoaded", function() {
-            document.getElementById("sqft").addEventListener("input", calculateCost);
-            document.getElementById("coverage").addEventListener("input", calculateCost);
-        });
-    })();
-</script>
+        body {
+            font-family: 'Poppins', sans-serif; /* Ensures Poppins is applied */
+            font-size: 14px;
+            background: #fff;
+            overflow-x: hidden;
+        }
+
+        .calculator {
+            background: #fff;
+            padding: 40px 20px;
+            border-radius: 10px;
+            max-width: 400px;
+            margin: 40px auto;
+            box-shadow: 0px 4px 10px rgba(0, 86, 179, 0.3);
+            border: 2px solid var(--secondaryColour);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        h2 {
+            font-size: 22px;
+            color: var(--tertiaryColour);
+            text-align: center;
+            font-weight: 600;
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-size: 16px;
+            color: var(--secondaryColour);
+            font-weight: 600;
+        }
+
+        input, output {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid var(--secondaryColour);
+            border-radius: 5px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        input[type="number"] {
+            background: white;
+            color: black;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            background: var(--tertiaryColour);
+            outline: none;
+            border-radius: 5px;
+        }
+
+        /* Slider Thumb */
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--mainColour);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: var(--mainColour);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .output-box {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            background: var(--mainColour);
+            color: #000;
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .footer {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculator">
+        <h2>Home Insurance Calculator</h2>
+
+        <label for="sqft">Enter Your Home's Square Footage:</label>
+        <input type="number" id="sqft" placeholder="e.g. 1500">
+
+        <label>Industry Standard Rate:</label>
+        <div class="output-box">€220 per sq. ft</div>
+
+        <label for="coverage">Your Insurance Coverage (%):</label>
+        <input type="range" min="0" max="100" value="100" class="slider" id="coverage">
+        <output id="coverageValue">100%</output>
+
+        <label>Estimated Rebuild Cost:</label>
+        <div class="output-box" id="totalCost">€0</div>
+
+        <label>Your Insurance Payout:</label>
+        <div class="output-box" id="insurancePayout">€0</div>
+
+        <label>Out-of-Pocket Expense:</label>
+        <div class="output-box" id="outOfPocket">€0</div>
+
+        <div class="footer">Ensure your insurance covers the full rebuild cost.</div>
+    </div>
+
+    <script>
+        (function() {
+            function calculateCost() {
+                let sqft = document.getElementById("sqft").value;
+                let coverage = document.getElementById("coverage").value;
+                let rate = 220;
+
+                if (sqft <= 0 || isNaN(sqft)) {
+                    document.getElementById("totalCost").innerText = "€0";
+                    document.getElementById("insurancePayout").innerText = "€0";
+                    document.getElementById("outOfPocket").innerText = "€0";
+                    return;
+                }
+
+                let totalCost = sqft * rate;
+                let insurancePayout = (totalCost * coverage) / 100;
+                let outOfPocket = totalCost - insurancePayout;
+
+                document.getElementById("coverageValue").innerText = coverage + "%";
+                document.getElementById("totalCost").innerText = "€" + totalCost.toLocaleString();
+                document.getElementById("insurancePayout").innerText = "€" + insurancePayout.toLocaleString();
+                document.getElementById("outOfPocket").innerText = "€" + outOfPocket.toLocaleString();
+            }
+
+            document.addEventListener("DOMContentLoaded", function() {
+                document.getElementById("sqft").addEventListener("input", calculateCost);
+                document.getElementById("coverage").addEventListener("input", calculateCost);
+            });
+        })();
+    </script>
+
+</body>
+</html>
