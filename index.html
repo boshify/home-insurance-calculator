@@ -24,7 +24,7 @@
 
         .calculator {
             background: #fff;
-            padding: 40px 25px; /* Adjusted padding to fix right-side spacing */
+            padding: 40px 30px; /* Increased padding for better spacing */
             border-radius: 10px;
             max-width: 400px;
             margin: 40px auto;
@@ -50,12 +50,14 @@
         }
 
         input, output {
-            width: 100%;
-            padding: 12px; /* Adjusted padding for consistent spacing */
+            width: calc(100% - 10px); /* Ensures spacing from borders */
+            padding: 12px;
             font-size: 16px;
             border: 1px solid var(--secondaryColour);
             border-radius: 5px;
             font-family: 'Poppins', sans-serif;
+            margin-bottom: 15px; /* Ensures spacing between elements */
+            display: block;
         }
 
         input[type="number"] {
@@ -67,11 +69,13 @@
 
         .slider {
             -webkit-appearance: none;
-            width: 100%;
+            width: calc(100% - 10px); /* Fixes right-side spacing */
             height: 8px;
             background: var(--tertiaryColour);
             outline: none;
             border-radius: 5px;
+            margin-bottom: 15px; /* Adds spacing below slider */
+            display: block;
         }
 
         /* Slider Thumb */
@@ -99,7 +103,7 @@
             font-size: 20px;
             font-weight: bold;
             margin-top: 10px;
-            padding: 12px; /* Increased padding to match other elements */
+            padding: 12px;
             border-radius: 5px;
             background: var(--mainColour);
             color: #000;
