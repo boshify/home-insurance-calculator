@@ -1,0 +1,137 @@
+<div class="calculator">
+    <h2>Home Insurance Calculator</h2>
+
+    <label for="sqft">Enter Your Home's Square Footage:</label>
+    <input type="number" id="sqft" placeholder="e.g. 1500">
+
+    <label>Industry Standard Rate:</label>
+    <div class="output-box">€220 per sq. ft</div>
+
+    <label for="coverage">Your Insurance Coverage (%):</label>
+    <input type="range" min="0" max="100" value="100" class="slider" id="coverage">
+    <output id="coverageValue">100%</output>
+
+    <label>Estimated Rebuild Cost:</label>
+    <div class="output-box" id="totalCost">€0</div>
+
+    <label>Your Insurance Payout:</label>
+    <div class="output-box" id="insurancePayout">€0</div>
+
+    <label>Out-of-Pocket Expense:</label>
+    <div class="output-box" id="outOfPocket">€0</div>
+
+    <div class="footer">Ensure your insurance covers the full rebuild cost.</div>
+</div>
+
+<style>
+    .calculator {
+        background: #f2f7f9;
+        padding: 40px 20px;
+        border-radius: 10px;
+        max-width: 400px;
+        margin: 40px auto;
+        box-shadow: 0px 4px 10px rgba(44, 84, 220, 0.3);
+    }
+
+    label {
+        display: block;
+        margin: 15px 0 5px;
+        font-size: 16px;
+        color: #2C54DC;
+    }
+
+    input, output {
+        width: 100%;
+        padding: 10px;
+        font-size: 18px;
+        border: none;
+        border-radius: 5px;
+    }
+
+    input[type="number"] {
+        background: white;
+        color: black;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .slider {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 8px;
+        background: #2C54DC;
+        outline: none;
+        border-radius: 5px;
+        position: relative;
+    }
+
+    /* New Slider Thumb (Handle) */
+    .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        background: #fff; /* White thumb */
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3); /* Slight shadow */
+    }
+
+    .slider::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        background: #fff;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .output-box {
+        font-size: 22px;
+        font-weight: bold;
+        margin-top: 10px;
+        padding: 10px;
+        border-radius: 5px;
+        background: #2C54DC;
+        color: white;
+        text-align: center;
+    }
+
+    .footer {
+        margin-top: 10px;
+        font-size: 14px;
+        color: #666;
+        text-align: center;
+    }
+</style>
+
+<script>
+    (function() {
+        function calculateCost() {
+            let sqft = document.getElementById("sqft").value;
+            let coverage = document.getElementById("coverage").value;
+            let rate = 220;
+
+            if (sqft <= 0 || isNaN(sqft)) {
+                document.getElementById("totalCost").innerText = "€0";
+                document.getElementById("insurancePayout").innerText = "€0";
+                document.getElementById("outOfPocket").innerText = "€0";
+                return;
+            }
+
+            let totalCost = sqft * rate;
+            let insurancePayout = (totalCost * coverage) / 100;
+            let outOfPocket = totalCost - insurancePayout;
+
+            document.getElementById("coverageValue").innerText = coverage + "%";
+            document.getElementById("totalCost").innerText = "€" + totalCost.toLocaleString();
+            document.getElementById("insurancePayout").innerText = "€" + insurancePayout.toLocaleString();
+            document.getElementById("outOfPocket").innerText = "€" + outOfPocket.toLocaleString();
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("sqft").addEventListener("input", calculateCost);
+            document.getElementById("coverage").addEventListener("input", calculateCost);
+        });
+    })();
+</script>
