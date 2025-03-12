@@ -2,145 +2,408 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <title>Rebuilding Costs for Insurance Purposes (2024/2025)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Home Insurance Calculator</title>
-  <!-- Load Poppins Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-  <!-- Optional: Include any CSS you need (can be your existing styles) -->
+  
+  <!-- Load a basic font -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+    rel="stylesheet"
+  />
+
   <style>
-    :root {
-      --mainColour: #CDE730;
-      --secondaryColour: #0056b3;
-      --tertiaryColour: #0056b3;
+    * {
+      box-sizing: border-box;
     }
     body {
-      font-family: 'Poppins', sans-serif;
-      font-size: 14px;
-      background: #fff;
       margin: 0;
-      padding: 20px;
+      font-family: 'Poppins', sans-serif;
+      background: #f9f9f9;
+      color: #333;
     }
-    .calculator {
+    .calculator-container {
+      display: flex;
+      flex-wrap: wrap; /* so it stacks on narrow screens */
+      max-width: 1200px;
+      margin: 20px auto;
       background: #fff;
-      padding: 40px 30px;
-      border-radius: 10px;
-      max-width: 400px;
-      margin: 40px auto;
-      box-shadow: 0px 4px 10px rgba(0, 86, 179, 0.3);
-      border: 2px solid var(--secondaryColour);
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .left-col,
+    .right-col {
+      padding: 20px;
+      flex: 1 1 50%; /* two columns on wide screens */
+      min-width: 300px;
+    }
+    .left-col {
+      background: #fefefe;
+      border-right: 1px solid #ccc;
+    }
+    .right-col {
+      background: #fff;
+    }
+
+    /* Headings */
+    h1, h2 {
+      margin-top: 0;
+      font-weight: 600;
+    }
+    h1 {
+      font-size: 1.4rem;
+      margin-bottom: 10px;
     }
     h2 {
-      font-size: 26px;
-      color: var(--tertiaryColour);
-      text-align: center;
-      font-weight: 600;
-      margin-bottom: 20px;
+      font-size: 1.2rem;
+      margin-bottom: 10px;
     }
     label {
       display: block;
-      margin: 15px 0 5px;
-      font-size: 16px;
-      color: var(--secondaryColour);
       font-weight: 600;
+      margin: 10px 0 5px;
     }
-    input, output, .output-box {
-      width: calc(100% - 10px);
-      padding: 12px;
-      font-size: 16px;
-      border: 1px solid var(--secondaryColour);
-      border-radius: 5px;
+    .description {
+      font-size: 0.9rem;
+      color: #555;
       margin-bottom: 15px;
+      line-height: 1.4;
+    }
+
+    /* Inputs and selects */
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #999;
+      border-radius: 4px;
+      font-family: inherit;
+    }
+    .radio-group {
+      margin-bottom: 15px;
+    }
+    .radio-group label {
+      font-weight: normal;
+      margin-bottom: 5px;
+    }
+    .radio-option {
       display: block;
-      font-family: 'Poppins', sans-serif;
-    }
-    .slider {
-      -webkit-appearance: none;
-      width: calc(100% - 10px);
-      height: 8px;
-      background: var(--tertiaryColour);
-      outline: none;
-      border-radius: 5px;
-      margin-bottom: 15px;
-    }
-    .slider::-webkit-slider-thumb,
-    .slider::-moz-range-thumb {
-      width: 20px;
-      height: 20px;
-      background: var(--mainColour);
-      border-radius: 50%;
+      margin-bottom: 5px;
       cursor: pointer;
-      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
     }
-    .output-box {
-      font-size: 20px;
-      font-weight: bold;
-      background: var(--mainColour);
-      color: #000;
-      text-align: center;
+    .radio-option input {
+      margin-right: 6px;
     }
-    .footer {
+
+    /* Summary table */
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    .summary-table thead {
+      background: #f2f2f2;
+    }
+    .summary-table th,
+    .summary-table td {
+      text-align: left;
+      padding: 8px;
+      border-bottom: 1px solid #ddd;
+    }
+    .summary-header {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .download-btn {
+      display: inline-block;
+      padding: 10px 15px;
       margin-top: 15px;
-      font-size: 14px;
-      color: #666;
-      text-align: center;
+      background: #00b163;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .download-btn:hover {
+      background: #009a55;
     }
   </style>
 </head>
 <body>
-  <div id="app">
-    <!-- The Vue component will render here -->
-    <home-insurance-calculator></home-insurance-calculator>
+
+<div class="calculator-container">
+  <!-- Left Column (Inputs) -->
+  <div class="left-col">
+    <h1>Rebuilding Costs for Insurance Purposes (2024/2025)</h1>
+    
+    <!-- House Type -->
+    <label for="houseType">House type</label>
+    <select id="houseType">
+      <option value="-1">Select value</option>
+      <option value="0">Terraced; 2 bedrooms (typical size 78 sq. m)</option>
+      <option value="1">Terraced; 3 bedrooms (typical size 98 sq. m)</option>
+      <option value="2">Semi-detached; 3 bedrooms (typical size 98 sq. m)</option>
+      <option value="3">Semi-detached; 4 bedrooms (typical size 115 sq. m)</option>
+      <option value="4">Detached; 4 bedrooms (typical size 113 sq. m)</option>
+      <option value="5">Detached Bungalow; 4 bedrooms (typical size 137 sq. m)</option>
+    </select>
+    <div class="description">
+      The rebuilding rates are for speculatively built homes i.e. estate-type homes and should not be used for other house styles such as one-off homes in the countryside or period properties.
+    </div>
+
+    <!-- Gross internal floor area -->
+    <label for="floorArea">Gross internal floor area (sq. m.)</label>
+    <input
+      type="number"
+      id="floorArea"
+      value="100"
+      min="1"
+      max="10000"
+    />
+    <div class="description">
+      Calculate the internal area of your property by measuring the internal finish of the perimeter or party walls within the property, ignoring skirting boards, at each floor level. For two or three-storey houses, normally the upper floor is the same as the ground floor. However, if it is different, you should calculate each storey separately to retrieve a more accurate area calculation. Once you have all the areas, add them together to get the total sq.m area.
+    </div>
+
+    <!-- Separate Garage -->
+    <div class="radio-group">
+      <label>Separate Garage</label>
+      <div class="description">
+        If your garage is part of house ensure that it is included in above area figure.
+      </div>
+      <label class="radio-option">
+        <input type="radio" name="garage" value="0" checked />
+        No Garage
+      </label>
+      <label class="radio-option">
+        <input type="radio" name="garage" value="22880" />
+        Single Car Garage
+      </label>
+      <label class="radio-option">
+        <input type="radio" name="garage" value="40928" />
+        Double Car Garage
+      </label>
+    </div>
+
+    <!-- Add For Higher Than Average -->
+    <label for="higherAverage">Add For Higher Than Average</label>
+    <input
+      type="number"
+      id="higherAverage"
+      value="0"
+      min="0"
+      max="1000000"
+    />
+    <div class="description">
+      Costs are based on an average fit out. If you have a 'Higher Than Average' fit out for your Kitchen, Built-In Wardrobes, or other Special Finishes (e.g., Hardwood Timber Floors), add the additional amount here.
+    </div>
+
+    <!-- Additional Externals -->
+    <label for="externals">Additional Externals</label>
+    <input
+      type="number"
+      id="externals"
+      value="0"
+      min="0"
+      max="1000000"
+    />
+    <div class="description">
+      Add estimate for Rebuilding of any Outbuildings, Walls or Similar? The figures do, however, allow for a concrete path around the house, for driveway and re-grassing and fencing.
+    </div>
   </div>
 
-  <!-- Load Vue (from CDN) -->
-  <script src="https://unpkg.com/vue@2"></script>
-  <!-- Your Vue component script -->
-  <script>
-    Vue.component('home-insurance-calculator', {
-      template: `
-        <div class="calculator">
-          <h2>Home Insurance Calculator</h2>
-          <label for="sqft">Enter Your Home's Square Footage:</label>
-          <input type="number" v-model.number="sqft" placeholder="e.g. 1500" id="sqft">
-          <label>Industry Standard Rate:</label>
-          <div class="output-box">€220 per sq. ft</div>
-          <label for="coverage">Your Insurance Coverage (%):</label>
-          <input type="range" min="0" max="100" v-model.number="coverage" class="slider" id="coverage">
-          <output id="coverageValue">{{ coverage }}%</output>
-          <label>Estimated Rebuild Cost:</label>
-          <div class="output-box">€{{ totalCost.toLocaleString() }}</div>
-          <label>Your Insurance Payout:</label>
-          <div class="output-box">€{{ insurancePayout.toLocaleString() }}</div>
-          <label>Out-of-Pocket Expense:</label>
-          <div class="output-box">€{{ outOfPocket.toLocaleString() }}</div>
-          <div class="footer">
-            If your home is underinsured, you'll have to cover the remaining fee.
-          </div>
-        </div>
-      `,
-      data() {
-        return {
-          sqft: 0,
-          coverage: 100,
-          rate: 220
-        };
-      },
-      computed: {
-        totalCost() {
-          return this.sqft > 0 ? this.sqft * this.rate : 0;
-        },
-        insurancePayout() {
-          return this.totalCost * (this.coverage / 100);
-        },
-        outOfPocket() {
-          return this.totalCost - this.insurancePayout;
-        }
+  <!-- Right Column (Summary) -->
+  <div class="right-col">
+    <h2 class="summary-header">Total Summary</h2>
+
+    <table class="summary-table" id="summaryTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody id="summaryBody">
+        <!-- Dynamically filled by JavaScript -->
+      </tbody>
+    </table>
+
+    <button class="download-btn" id="downloadPdfBtn">Download PDF</button>
+  </div>
+</div>
+
+<!-- Include jsPDF from CDN for PDF generation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+  /***************************************************
+   * Data Setup
+   ***************************************************/
+  // House type to index mapping:
+  // 0 => Terraced; 2 bedrooms (78 sq. m)
+  // 1 => Terraced; 3 bedrooms (98 sq. m)
+  // 2 => Semi-detached; 3 bedrooms (98 sq. m)
+  // 3 => Semi-detached; 4 bedrooms (115 sq. m)
+  // 4 => Detached; 4 bedrooms (113 sq. m)
+  // 5 => Detached Bungalow; 4 bedrooms (137 sq. m)
+
+  // Region cost data: regionRates[regionName][houseTypeIndex]
+  // Values represent cost per sq. m.
+  const regionRates = {
+    "Dublin Region":   [3190, 3010, 3190, 3020, 3300, 2860],
+    "Cork Region":     [2845, 2680, 2860, 2720, 2980, 2690],
+    "Galway Region":   [2833, 2629, 2750, 2610, 2814, 2580],
+    "Waterford Region":[2790, 2590, 2775, 2635, 2866, 2470],
+    "Limerick Region": [2740, 2547, 2733, 2591, 2800, 2465],
+    "North West Region":[2633, 2432, 2528, 2428, 2639, 2368],
+    "North East Region":[2865, 2640, 2770, 2690, 2840, 2520]
+  };
+
+  const houseTypeLabels = [
+    "Terraced; 2 bedrooms (typical size 78 sq. m)",
+    "Terraced; 3 bedrooms (typical size 98 sq. m)",
+    "Semi-detached; 3 bedrooms (typical size 98 sq. m)",
+    "Semi-detached; 4 bedrooms (typical size 115 sq. m)",
+    "Detached; 4 bedrooms (typical size 113 sq. m)",
+    "Detached Bungalow; 4 bedrooms (typical size 137 sq. m)"
+  ];
+
+  /***************************************************
+   * DOM Elements
+   ***************************************************/
+  const houseTypeEl    = document.getElementById("houseType");
+  const floorAreaEl    = document.getElementById("floorArea");
+  const garageRadios   = document.getElementsByName("garage");
+  const higherAvgEl    = document.getElementById("higherAverage");
+  const externalsEl    = document.getElementById("externals");
+  const summaryBodyEl  = document.getElementById("summaryBody");
+  const downloadBtn    = document.getElementById("downloadPdfBtn");
+
+  /***************************************************
+   * Calculation + Rendering
+   ***************************************************/
+  function calculateAndRender() {
+    const houseTypeIndex = parseInt(houseTypeEl.value, 10);
+    const floorArea      = parseFloat(floorAreaEl.value) || 0;
+    const addHigher      = parseFloat(higherAvgEl.value) || 0;
+    const addExternals   = parseFloat(externalsEl.value) || 0;
+
+    let selectedGarageValue = 0;
+    for (let i = 0; i < garageRadios.length; i++) {
+      if (garageRadios[i].checked) {
+        selectedGarageValue = parseFloat(garageRadios[i].value) || 0;
+        break;
+      }
+    }
+
+    // Prepare table body
+    summaryBodyEl.innerHTML = "";
+
+    // Add the "House type" row
+    const houseTypeLabel = (houseTypeIndex >= 0)
+      ? houseTypeLabels[houseTypeIndex]
+      : "N/A";
+
+    addRow("House Type", houseTypeLabel);
+
+    // Add floor area
+    addRow("Gross internal floor area (sq. m.)", floorArea + " sq m");
+
+    // Add separate garage (only if > 0)
+    if (selectedGarageValue > 0) {
+      // show the numeric cost, but also show which type
+      const textGarage = (selectedGarageValue === 22880)
+        ? "Single Car Garage"
+        : "Double Car Garage";
+      addRow(textGarage, "€ " + formatNumber(selectedGarageValue));
+    } else {
+      addRow("No Garage", "€ 0");
+    }
+
+    // Add for higher than average
+    addRow("Add For Higher Than Average", "€ " + formatNumber(addHigher));
+
+    // Additional externals
+    addRow("Additional Externals", "€ " + formatNumber(addExternals));
+
+    // If user hasn't picked a valid house type, don't calculate region costs
+    if (houseTypeIndex < 0) {
+      return;
+    }
+
+    // For each region, compute cost
+    for (const [regionName, costs] of Object.entries(regionRates)) {
+      const ratePerSqM = costs[houseTypeIndex]; // cost per sq. m. for chosen house
+      const regionTotal = (ratePerSqM * floorArea) + selectedGarageValue + addHigher + addExternals;
+      addRow(regionName, "€ " + formatNumber(regionTotal));
+    }
+  }
+
+  function addRow(label, value) {
+    const row = document.createElement("tr");
+    const labelCell = document.createElement("td");
+    labelCell.textContent = label;
+    const valueCell = document.createElement("td");
+    valueCell.textContent = value;
+    row.appendChild(labelCell);
+    row.appendChild(valueCell);
+    summaryBodyEl.appendChild(row);
+  }
+
+  function formatNumber(num) {
+    return num.toLocaleString("en-US", { minimumFractionDigits: 0 });
+  }
+
+  /***************************************************
+   * PDF Generation
+   ***************************************************/
+  async function downloadPDF() {
+    // Using jsPDF to generate a simple text-based PDF of the summary
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit: "pt", format: "a4" });
+
+    let yPos = 40;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(14);
+    doc.text("Cost Report (2024/2025)", 40, yPos);
+    yPos += 20;
+
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "normal");
+
+    // Gather text from the summary table
+    const rows = summaryBodyEl.querySelectorAll("tr");
+    rows.forEach((tr) => {
+      const cells = tr.querySelectorAll("td");
+      if (cells.length === 2) {
+        const label = cells[0].textContent.trim();
+        const val   = cells[1].textContent.trim();
+        doc.text(label + ": " + val, 40, yPos);
+        yPos += 15;
       }
     });
 
-    new Vue({
-      el: "#app"
-    });
-  </script>
+    // Save
+    doc.save("cost_report.pdf");
+  }
+
+  /***************************************************
+   * Event Listeners
+   ***************************************************/
+  houseTypeEl.addEventListener("change", calculateAndRender);
+  floorAreaEl.addEventListener("input", calculateAndRender);
+  higherAvgEl.addEventListener("input", calculateAndRender);
+  externalsEl.addEventListener("input", calculateAndRender);
+  for (let i = 0; i < garageRadios.length; i++) {
+    garageRadios[i].addEventListener("change", calculateAndRender);
+  }
+  downloadBtn.addEventListener("click", downloadPDF);
+
+  // Initial calculation on page load
+  window.addEventListener("DOMContentLoaded", calculateAndRender);
+</script>
 </body>
 </html>
