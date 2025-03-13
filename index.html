@@ -11,9 +11,6 @@
     rel="stylesheet"
   />
 
-  <!-- jsPDF (for PDF generation) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
   <style>
     :root {
       --mainColour: #CDE730;
@@ -105,10 +102,11 @@
       font-weight: 600;
     }
 
-    /* DOWNLOAD BUTTON */
-    .download-btn {
-      display: block;
+    /* CTA BUTTON */
+    .cta-btn {
+      display: inline-block;
       width: 100%;
+      text-align: center;
       padding: 12px;
       font-size: 16px;
       font-weight: bold;
@@ -116,11 +114,10 @@
       background: var(--mainColour);
       border: none;
       border-radius: 5px;
-      text-align: center;
-      cursor: pointer;
+      text-decoration: none;
       margin-top: 20px;
     }
-    .download-btn:hover {
+    .cta-btn:hover {
       background: #d2f048; /* Slightly lighter on hover */
     }
 
@@ -129,52 +126,6 @@
       font-size: 14px;
       color: #666;
       text-align: center;
-    }
-
-    /* HIDDEN PDF CONTENT (for doc.html) */
-    #pdfContent {
-      display: none; /* hidden on the actual page */
-      font-family: 'Poppins', sans-serif;
-      font-size: 12px;
-      color: #000;
-      width: 800px; /* a rough width for the PDF layout */
-    }
-    #pdfContent .pdf-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 20px;
-    }
-    #pdfContent .pdf-header .pdf-title {
-      font-size: 14px;
-      font-weight: 600;
-      max-width: 400px;
-      line-height: 1.4em;
-    }
-    #pdfContent .assumptions,
-    #pdfContent .contact-info {
-      margin-top: 20px;
-      line-height: 1.4em;
-    }
-    #pdfContent table {
-      border-collapse: collapse;
-      width: 100%;
-      margin-top: 10px;
-      margin-bottom: 20px;
-    }
-    #pdfContent th,
-    #pdfContent td {
-      border: 1px solid #333;
-      padding: 6px;
-      font-size: 12px;
-    }
-    #pdfContent th {
-      background: #eee;
-      font-weight: 600;
-    }
-    #pdfContent .pdf-footer {
-      margin-top: 10px;
-      line-height: 1.4em;
     }
   </style>
 </head>
@@ -229,91 +180,18 @@
       </tbody>
     </table>
 
-    <!-- PDF BUTTON -->
-    <button class="download-btn" id="downloadPdfBtn">Download PDF</button>
+    <!-- CALL US NOW BUTTON -->
+    <a
+      class="cta-btn"
+      href="https://www.enviroleak.ie/contact"
+      target="_blank"
+      rel="noopener"
+    >
+      Call us now! &rarr;
+    </a>
 
     <div class="footer">
       Ensure you are not underinsured. Enter correct values to get more accurate results.
-    </div>
-  </div>
-
-  <!-- HIDDEN PDF CONTENT -->
-  <div id="pdfContent">
-    <div class="pdf-header">
-      <!-- Left: Logo -->
-      <div class="logo">
-        <img
-          id="pdfLogo"
-          src=""
-          alt="Enviroleak Logo"
-          style="width:120px; height:auto;"
-        />
-      </div>
-      <!-- Right: Title & disclaimers -->
-      <div class="pdf-title">
-        Calculation of House Rebuilding Costs for Insurance Purposes
-        <br /><br />
-        <span style="font-weight:400;font-size:11px;">
-          This document is a summary of the data provided as part of the Enviroleak Calculator.
-          Please ensure that the assumptions are applicable for the house type you are making a rebuild cost estimation for.
-        </span>
-        <br /><br />
-        <span id="pdfDate" style="font-size:10px;"></span>
-      </div>
-    </div>
-
-    <!-- Assumptions block -->
-    <div class="assumptions">
-      <strong>Assumptions:</strong>
-      <ul style="margin-top:5px;">
-        <li>The rebuilding rates are for speculatively built homes (estate-type homes).</li>
-        <li>Figures are a MINIMUM base cost guide. Homeowners may add for better finishes.</li>
-        <li>No allowance for outbuildings (unless added above).</li>
-        <li>Figures allow for demolition costs, professional fees, and VAT.</li>
-        <li>Professional fees include architects, surveyors, engineers, etc.</li>
-        <li>House contents (furniture, carpets, etc.) are separate from building costs.</li>
-      </ul>
-    </div>
-
-    <!-- Summary table in PDF -->
-    <table id="pdfSummary">
-      <thead>
-        <tr>
-          <th style="width:30%;">Name</th>
-          <th style="width:40%;">Option/Unit</th>
-          <th style="width:30%;">Value</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- We will fill this via JS -->
-      </tbody>
-    </table>
-
-    <!-- Contact info -->
-    <div class="contact-info">
-      <strong>Enviroleak Contact Info</strong><br />
-      <em style="font-size:11px;">
-        info@enviroleak.ie<br /><br />
-        <strong>Dublin Office:</strong><br />
-        13 Upper Baggot Street, 2nd Floor, Dublin 4, DO4W7K5<br />
-        (01) 539 4393<br /><br />
-
-        <strong>Cork Office:</strong><br />
-        88/90 Main St, Rathgoggan Middle, Charleville, Co. Cork, P56 HC86<br />
-        (063) 732 11<br /><br />
-
-        <strong>Galway Office:</strong><br />
-        Galway Technology Centre, Mervue Business Park, Galway, H91D932<br />
-        (091) 396443<br /><br />
-
-        <strong>Carlow Office:</strong><br />
-        Loughmartin Business Park, Bunclody Road, Tullow, Carlow, R93T6CD<br />
-        (059) 9100464
-      </em>
-    </div>
-
-    <div class="pdf-footer">
-      <strong>Call to Action:</strong> If you have any questions regarding home insurance coverage and costs, or are experiencing an oil leak, contact Enviroleak immediately for a consultation.
     </div>
   </div>
 
@@ -347,17 +225,6 @@
   const higherAvgEl    = document.getElementById("higherAverage");
   const externalsEl    = document.getElementById("externals");
   const summaryBodyEl  = document.getElementById("summaryBody");
-  const downloadBtn    = document.getElementById("downloadPdfBtn");
-
-  // PDF Elements
-  const pdfContentEl   = document.getElementById("pdfContent");
-  const pdfSummaryBody = pdfContentEl.querySelector("#pdfSummary tbody");
-  const pdfDateEl      = document.getElementById("pdfDate");
-  const pdfLogoEl      = document.getElementById("pdfLogo");
-
-  // Attempt to load your hosted logo (SVG) for the PDF
-  // If there's a CORS issue, the src won't load in the PDF.
-  pdfLogoEl.src = "https://raw.githubusercontent.com/boshify/home-insurance-calculator/main/logo.svg";
 
   /********************************************
    * Calculation & Rendering
@@ -376,7 +243,7 @@
       }
     }
 
-    // Clear table in the calculator
+    // Clear table
     summaryBodyEl.innerHTML = "";
 
     // House Type
@@ -403,7 +270,7 @@
     // Region calculations
     if (houseTypeIndex >= 0) {
       for (const [regionName, costs] of Object.entries(regionRates)) {
-        const rate   = costs[houseTypeIndex];
+        const rate = costs[houseTypeIndex];
         const regionTotal = (rate * floorArea) + selectedGarageValue + higherAvg + externals;
         addRowCalc(regionName, "€" + formatNumber(regionTotal));
       }
@@ -426,76 +293,6 @@
   }
 
   /********************************************
-   * PDF Generation with doc.html
-   ********************************************/
-  async function downloadPDF() {
-    // 1) Fill #pdfSummary with the same data
-    pdfSummaryBody.innerHTML = ""; // clear
-    const calcRows = document.querySelectorAll("#summaryBody tr");
-    calcRows.forEach((tr) => {
-      const tds = tr.querySelectorAll("td");
-      if (tds.length === 2) {
-        const nameCell = tds[0].textContent.trim();
-        const valCell  = tds[1].textContent.trim();
-
-        // We'll guess an "option" from the row. For certain rows, we parse differently.
-        let optionCell = "";
-        let valueCell  = valCell;
-
-        if (nameCell === "Gross internal floor area (sq. m.)") {
-          // e.g. "100 sq m"
-          optionCell = "sq. m.";
-        } else if (nameCell === "Separate Garage") {
-          // e.g. "Single Car Garage ( €22,880 )"
-          // We can parse out the text before the "(" as the "option"
-          const match = valCell.match(/^(.*?)\s*\(/);
-          if (match) {
-            optionCell = match[1].trim();
-          }
-        } else {
-          // For region lines, we just keep them blank for 'option'
-        }
-
-        // Insert row
-        const newTr = document.createElement("tr");
-        const td1 = document.createElement("td");
-        const td2 = document.createElement("td");
-        const td3 = document.createElement("td");
-
-        td1.textContent = nameCell;
-        td2.textContent = optionCell;
-        td3.textContent = valueCell;
-
-        newTr.appendChild(td1);
-        newTr.appendChild(td2);
-        newTr.appendChild(td3);
-
-        pdfSummaryBody.appendChild(newTr);
-      }
-    });
-
-    // 2) Insert date
-    const now = new Date();
-    pdfDateEl.textContent = "Calculator Completed on: " + now.toLocaleString();
-
-    // 3) Generate PDF with doc.html
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({ unit: "px", format: "a4" });
-
-    await doc.html(pdfContentEl, {
-      x: 30,
-      y: 30,
-      html2canvas: {
-        // Adjust for better scale if needed
-        scale: 0.9,
-      },
-      callback: function (doc) {
-        doc.save("HomeInsuranceEstimate.pdf");
-      },
-    });
-  }
-
-  /********************************************
    * Event Listeners
    ********************************************/
   houseTypeEl.addEventListener("change", calculateAndRender);
@@ -505,7 +302,6 @@
   for (let i = 0; i < garageRadios.length; i++) {
     garageRadios[i].addEventListener("change", calculateAndRender);
   }
-  downloadBtn.addEventListener("click", downloadPDF);
 
   window.addEventListener("DOMContentLoaded", calculateAndRender);
 </script>
