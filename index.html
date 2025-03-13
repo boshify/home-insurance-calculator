@@ -130,11 +130,57 @@
       color: #666;
       text-align: center;
     }
+
+    /* HIDDEN PDF CONTENT (for doc.html) */
+    #pdfContent {
+      display: none; /* hidden on the actual page */
+      font-family: 'Poppins', sans-serif;
+      font-size: 12px;
+      color: #000;
+      width: 800px; /* a rough width for the PDF layout */
+    }
+    #pdfContent .pdf-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+    #pdfContent .pdf-header .pdf-title {
+      font-size: 14px;
+      font-weight: 600;
+      max-width: 400px;
+      line-height: 1.4em;
+    }
+    #pdfContent .assumptions,
+    #pdfContent .contact-info {
+      margin-top: 20px;
+      line-height: 1.4em;
+    }
+    #pdfContent table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 10px;
+      margin-bottom: 20px;
+    }
+    #pdfContent th,
+    #pdfContent td {
+      border: 1px solid #333;
+      padding: 6px;
+      font-size: 12px;
+    }
+    #pdfContent th {
+      background: #eee;
+      font-weight: 600;
+    }
+    #pdfContent .pdf-footer {
+      margin-top: 10px;
+      line-height: 1.4em;
+    }
   </style>
 </head>
 <body>
 
-  <!-- CALCULATOR -->
+  <!-- CALCULATOR ONLY -->
   <div class="calculator">
     <h2>Home Insurance Calculator</h2>
 
@@ -191,6 +237,86 @@
     </div>
   </div>
 
+  <!-- HIDDEN PDF CONTENT -->
+  <div id="pdfContent">
+    <div class="pdf-header">
+      <!-- Left: Logo -->
+      <div class="logo">
+        <img
+          id="pdfLogo"
+          src=""
+          alt="Enviroleak Logo"
+          style="width:120px; height:auto;"
+        />
+      </div>
+      <!-- Right: Title & disclaimers -->
+      <div class="pdf-title">
+        Calculation of House Rebuilding Costs for Insurance Purposes
+        <br /><br />
+        <span style="font-weight:400;font-size:11px;">
+          This document is a summary of the data provided as part of the Enviroleak Calculator.
+          Please ensure that the assumptions are applicable for the house type you are making a rebuild cost estimation for.
+        </span>
+        <br /><br />
+        <span id="pdfDate" style="font-size:10px;"></span>
+      </div>
+    </div>
+
+    <!-- Assumptions block -->
+    <div class="assumptions">
+      <strong>Assumptions:</strong>
+      <ul style="margin-top:5px;">
+        <li>The rebuilding rates are for speculatively built homes (estate-type homes).</li>
+        <li>Figures are a MINIMUM base cost guide. Homeowners may add for better finishes.</li>
+        <li>No allowance for outbuildings (unless added above).</li>
+        <li>Figures allow for demolition costs, professional fees, and VAT.</li>
+        <li>Professional fees include architects, surveyors, engineers, etc.</li>
+        <li>House contents (furniture, carpets, etc.) are separate from building costs.</li>
+      </ul>
+    </div>
+
+    <!-- Summary table in PDF -->
+    <table id="pdfSummary">
+      <thead>
+        <tr>
+          <th style="width:30%;">Name</th>
+          <th style="width:40%;">Option/Unit</th>
+          <th style="width:30%;">Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- We will fill this via JS -->
+      </tbody>
+    </table>
+
+    <!-- Contact info -->
+    <div class="contact-info">
+      <strong>Enviroleak Contact Info</strong><br />
+      <em style="font-size:11px;">
+        info@enviroleak.ie<br /><br />
+        <strong>Dublin Office:</strong><br />
+        13 Upper Baggot Street, 2nd Floor, Dublin 4, DO4W7K5<br />
+        (01) 539 4393<br /><br />
+
+        <strong>Cork Office:</strong><br />
+        88/90 Main St, Rathgoggan Middle, Charleville, Co. Cork, P56 HC86<br />
+        (063) 732 11<br /><br />
+
+        <strong>Galway Office:</strong><br />
+        Galway Technology Centre, Mervue Business Park, Galway, H91D932<br />
+        (091) 396443<br /><br />
+
+        <strong>Carlow Office:</strong><br />
+        Loughmartin Business Park, Bunclody Road, Tullow, Carlow, R93T6CD<br />
+        (059) 9100464
+      </em>
+    </div>
+
+    <div class="pdf-footer">
+      <strong>Call to Action:</strong> If you have any questions regarding home insurance coverage and costs, or are experiencing an oil leak, contact Enviroleak immediately for a consultation.
+    </div>
+  </div>
+
 <script>
   /********************************************
    * Data + DOM
@@ -223,6 +349,16 @@
   const summaryBodyEl  = document.getElementById("summaryBody");
   const downloadBtn    = document.getElementById("downloadPdfBtn");
 
+  // PDF Elements
+  const pdfContentEl   = document.getElementById("pdfContent");
+  const pdfSummaryBody = pdfContentEl.querySelector("#pdfSummary tbody");
+  const pdfDateEl      = document.getElementById("pdfDate");
+  const pdfLogoEl      = document.getElementById("pdfLogo");
+
+  // Attempt to load your hosted logo (SVG) for the PDF
+  // If there's a CORS issue, the src won't load in the PDF.
+  pdfLogoEl.src = "https://raw.githubusercontent.com/boshify/home-insurance-calculator/main/logo.svg";
+
   /********************************************
    * Calculation & Rendering
    ********************************************/
@@ -240,41 +376,41 @@
       }
     }
 
-    // Clear table
+    // Clear table in the calculator
     summaryBodyEl.innerHTML = "";
 
     // House Type
     let houseTypeLabel = (houseTypeIndex >= 0) ? houseTypeLabels[houseTypeIndex] : "N/A";
-    addRow("House Type", houseTypeLabel);
+    addRowCalc("House Type", houseTypeLabel);
 
     // Floor Area
-    addRow("Gross internal floor area (sq. m.)", floorArea + " sq m");
+    addRowCalc("Gross internal floor area (sq. m.)", floorArea + " sq m");
 
     // Garage
     if (selectedGarageValue === 0) {
-      addRow("Separate Garage", "No Garage");
+      addRowCalc("Separate Garage", "No Garage");
     } else {
       const garageTxt = (selectedGarageValue === 22880) ? "Single Car Garage" : "Double Car Garage";
-      addRow("Separate Garage", garageTxt + " ( €" + formatNumber(selectedGarageValue) + " )");
+      addRowCalc("Separate Garage", garageTxt + " ( €" + formatNumber(selectedGarageValue) + " )");
     }
 
     // Higher Than Average
-    addRow("Add For Higher Than Average", "€" + formatNumber(higherAvg));
+    addRowCalc("Add For Higher Than Average", "€" + formatNumber(higherAvg));
 
     // Additional Externals
-    addRow("Additional Externals", "€" + formatNumber(externals));
+    addRowCalc("Additional Externals", "€" + formatNumber(externals));
 
     // Region calculations
     if (houseTypeIndex >= 0) {
       for (const [regionName, costs] of Object.entries(regionRates)) {
         const rate   = costs[houseTypeIndex];
         const regionTotal = (rate * floorArea) + selectedGarageValue + higherAvg + externals;
-        addRow(regionName, "€" + formatNumber(regionTotal));
+        addRowCalc(regionName, "€" + formatNumber(regionTotal));
       }
     }
   }
 
-  function addRow(name, val) {
+  function addRowCalc(name, val) {
     const tr = document.createElement("tr");
     const tdName = document.createElement("td");
     const tdVal  = document.createElement("td");
@@ -290,173 +426,73 @@
   }
 
   /********************************************
-   * PDF Generation
+   * PDF Generation with doc.html
    ********************************************/
   async function downloadPDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({ unit: "pt", format: "a4" });
-
-    // Some base styling
-    doc.setFont("Poppins", "normal");
-
-    // Attempt to fetch your hosted logo (SVG)
-    const logoUrl = "https://raw.githubusercontent.com/boshify/home-insurance-calculator/main/logo.svg";
-
-    // Coordinates
-    let leftX = 40;
-    let topY  = 60;
-
-    // 1) Insert Enviroleak Logo
-    try {
-      const logoBase64 = await convertSvgToBase64(logoUrl);
-      // We'll scale it to ~80 wide
-      doc.addImage(logoBase64, "SVG", leftX, 30, 80, 30);
-    } catch (e) {
-      // if CORS fails, skip logo
-    }
-
-    // 2) Title (right side or top)
-    doc.setFontSize(14);
-    doc.setFont(undefined, "bold");
-    doc.text("Calculation of House Rebuilding Costs for Insurance Purposes", 300, 45, {
-      maxWidth: 270,
-    });
-
-    doc.setFontSize(10);
-    doc.setFont(undefined, "normal");
-    doc.text(
-      "This document is a summary of the data provided as part of the Enviroleak Calculator.\nPlease ensure that the assumptions are applicable for the house type you are making a rebuild cost estimation for.",
-      300,
-      60,
-      { maxWidth: 270, lineHeightFactor: 1.4 }
-    );
-
-    // 3) Date/time
-    doc.setFontSize(9);
-    const now = new Date();
-    doc.text("Calculator Completed on: " + now.toLocaleString(), 300, 105);
-
-    // 4) "Assumptions" on the left column
-    doc.setFontSize(10);
-    doc.setFont(undefined, "bold");
-    doc.text("Assumptions", leftX, topY);
-    topY += 15;
-    doc.setFont(undefined, "normal");
-    const assumptionsText = [
-      "• The rebuilding rates are for speculatively built homes (i.e. estate-type homes).",
-      "• Figures are a MINIMUM base cost guide. Homeowners may add for better finishes.",
-      "• No allowance for outbuildings (unless added above).",
-      "• Figures allow for demolition costs, professional fees, and VAT.",
-      "• Professional fees include architects, surveyors, engineers, etc.",
-      "• House contents (furniture, carpets, etc.) are separate from building costs.",
-    ].join("\n");
-
-    const wrappedAssumptions = doc.splitTextToSize(assumptionsText, 220);
-    doc.text(wrappedAssumptions, leftX, topY, { lineHeightFactor: 1.4 });
-    // measure how far we got
-    const assumptionsHeight = wrappedAssumptions.length * 14;
-    const nextLeftColumnY   = topY + assumptionsHeight + 30;
-
-    // 5) Summary Table on the right column
-    // We'll gather the summary from the DOM
-    let summaryData = gatherSummaryData();
-    // We'll position the table at x=300, y=120
-    let tableX = 300;
-    let tableY = 120;
-
-    doc.setFont(undefined, "bold");
-    doc.text("Name", tableX, tableY);
-    doc.text("Option/Unit", tableX + 160, tableY);
-    doc.text("Value", tableX + 300, tableY);
-    doc.setDrawColor(0, 0, 0);
-    doc.setLineWidth(0.5);
-    // horizontal line under headings
-    doc.line(tableX, tableY + 5, tableX + 370, tableY + 5);
-
-    doc.setFont(undefined, "normal");
-    let rowY = tableY + 20;
-    summaryData.forEach((item) => {
-      doc.text(item.name, tableX, rowY);
-      doc.text(item.option, tableX + 160, rowY);
-      doc.text(item.value, tableX + 300, rowY);
-      rowY += 14;
-    });
-
-    // 6) Contact Info at bottom
-    let finalY = Math.max(nextLeftColumnY, rowY + 20);
-    if (finalY > 700) finalY = 700; // crude page limit
-
-    doc.setFont(undefined, "bold");
-    doc.text("Enviroleak Contact Info", leftX, finalY);
-    doc.setFont(undefined, "normal");
-    finalY += 14;
-    const contactText = [
-      "info@enviroleak.ie",
-      "",
-      "Dublin Office:",
-      "13 Upper Baggot Street, 2nd Floor, Dublin 4, DO4W7K5",
-      "(01) 539 4393",
-      "",
-      "Cork Office:",
-      "88/90 Main St, Rathgoggan Middle, Charleville, Co. Cork, P56 HC86",
-      "(063) 732 11",
-      "",
-      "Galway Office:",
-      "Galway Technology Centre, Mervue Business Park, Galway, H91D932",
-      "(091) 396443",
-      "",
-      "Carlow Office:",
-      "Loughmartin Business Park, Bunclody Road, Tullow, Carlow, R93T6CD",
-      "(059) 9100464"
-    ];
-    doc.text(contactText, leftX, finalY, { lineHeightFactor: 1.3 });
-
-    // Save
-    doc.save("HomeInsuranceEstimate.pdf");
-  }
-
-  // Utility to gather the same table data from the DOM
-  function gatherSummaryData() {
-    const data = [];
-    const rows = document.querySelectorAll("#summaryBody tr");
-    rows.forEach((tr) => {
+    // 1) Fill #pdfSummary with the same data
+    pdfSummaryBody.innerHTML = ""; // clear
+    const calcRows = document.querySelectorAll("#summaryBody tr");
+    calcRows.forEach((tr) => {
       const tds = tr.querySelectorAll("td");
       if (tds.length === 2) {
-        // We'll break the first cell into "Name" & "Option/Unit" if relevant
         const nameCell = tds[0].textContent.trim();
         const valCell  = tds[1].textContent.trim();
 
-        // For the "Separate Garage" row, for example, we might parse out "No Garage"
-        // We'll do a simplistic approach: if the name is "House Type," the option is blank
-        let itemName = nameCell;
-        let itemOption = "";
-        // If nameCell is "Separate Garage" but the value says "Single Car Garage ( €22,880 )",
-        // we can split. We'll do a naive parse:
-        if (nameCell === "Separate Garage") {
-          itemOption = valCell.replace(/\(.*\)/, "").trim(); // remove the ( €22,880 ) part
-        } else if (nameCell === "House Type") {
-          itemOption = "";
-        } else if (nameCell === "Gross internal floor area (sq. m.)") {
-          itemOption = "sq. m.";
+        // We'll guess an "option" from the row. For certain rows, we parse differently.
+        let optionCell = "";
+        let valueCell  = valCell;
+
+        if (nameCell === "Gross internal floor area (sq. m.)") {
+          // e.g. "100 sq m"
+          optionCell = "sq. m.";
+        } else if (nameCell === "Separate Garage") {
+          // e.g. "Single Car Garage ( €22,880 )"
+          // We can parse out the text before the "(" as the "option"
+          const match = valCell.match(/^(.*?)\s*\(/);
+          if (match) {
+            optionCell = match[1].trim();
+          }
         } else {
-          // For region rows or others, we can keep it blank or parse differently
+          // For region lines, we just keep them blank for 'option'
         }
 
-        data.push({
-          name: itemName,
-          option: itemOption,
-          value: valCell
-        });
+        // Insert row
+        const newTr = document.createElement("tr");
+        const td1 = document.createElement("td");
+        const td2 = document.createElement("td");
+        const td3 = document.createElement("td");
+
+        td1.textContent = nameCell;
+        td2.textContent = optionCell;
+        td3.textContent = valueCell;
+
+        newTr.appendChild(td1);
+        newTr.appendChild(td2);
+        newTr.appendChild(td3);
+
+        pdfSummaryBody.appendChild(newTr);
       }
     });
-    return data;
-  }
 
-  // Utility: Convert external SVG to base64
-  async function convertSvgToBase64(url) {
-    const res = await fetch(url);
-    const text = await res.text();
-    return "data:image/svg+xml;base64," + btoa(text);
+    // 2) Insert date
+    const now = new Date();
+    pdfDateEl.textContent = "Calculator Completed on: " + now.toLocaleString();
+
+    // 3) Generate PDF with doc.html
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit: "px", format: "a4" });
+
+    await doc.html(pdfContentEl, {
+      x: 30,
+      y: 30,
+      html2canvas: {
+        // Adjust for better scale if needed
+        scale: 0.9,
+      },
+      callback: function (doc) {
+        doc.save("HomeInsuranceEstimate.pdf");
+      },
+    });
   }
 
   /********************************************
