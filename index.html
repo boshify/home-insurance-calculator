@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Oil Leak Home Insurance Claim Calculator</title>
+  <title>Home Insurance Calculator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Load Poppins from Google Fonts -->
@@ -15,311 +15,186 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <style>
-    /* RESET & BASE STYLES */
-    * {
-      box-sizing: border-box;
-      margin: 0; 
-      padding: 0;
+    :root {
+      --mainColour: #CDE730;
+      --secondaryColour: #0056b3;
+      --tertiaryColour: #0056b3;
     }
+
     body {
       font-family: 'Poppins', sans-serif;
-      background: #f4f7fa;
-      color: #333;
-      line-height: 1.5;
-      padding: 0 15px 40px;
+      font-size: 14px;
+      background: #fff;
+      overflow-x: hidden;
+      margin: 0;
+      padding: 0 0 40px; /* bottom spacing */
     }
-    a {
-      text-decoration: none;
+
+    /* CALCULATOR CONTAINER */
+    .calculator {
+      background: #fff;
+      padding: 40px 30px; /* Increased padding for better spacing */
+      border-radius: 10px;
+      max-width: 450px;
+      margin: 40px auto;
+      box-shadow: 0px 4px 10px rgba(0, 86, 179, 0.3);
+      border: 2px solid var(--secondaryColour);
     }
-    h1, h2, h3, h4, h5 {
+
+    h2 {
+      font-size: 26px; /* Increased heading size */
+      color: var(--tertiaryColour);
+      text-align: center;
       font-weight: 600;
-      margin-bottom: 10px;
-    }
-
-    /* TOP HEADER / PAGE INTRO */
-    .page-intro {
-      max-width: 1000px;
-      margin: 0 auto 25px;
-      padding: 20px;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-    }
-    .page-intro h1 {
-      font-size: 1.5rem;
-      margin-bottom: 15px;
-    }
-    .page-intro p {
-      margin-bottom: 10px;
-      color: #555;
-    }
-
-    /* CALCULATOR WRAPPER */
-    .calculator-wrapper {
-      max-width: 1000px;
-      margin: 0 auto;
-      display: flex;
-      flex-wrap: wrap; /* stack on mobile */
-      background: #fff;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    /* LEFT COL */
-    .left-col, .right-col {
-      flex: 1 1 50%;
-      min-width: 300px;
-      padding: 30px;
-    }
-    .left-col {
-      background: #fdfdfd;
-      border-right: 1px solid #e6e6e6;
-    }
-
-    /* HEADINGS INSIDE LEFT COL */
-    .left-col h2 {
-      font-size: 1.3rem;
       margin-bottom: 20px;
-      color: #333;
     }
 
-    /* LABELS & INPUTS */
     label {
       display: block;
       margin: 15px 0 5px;
+      font-size: 16px;
+      color: var(--secondaryColour);
       font-weight: 600;
-      font-size: 0.95rem;
-      color: #444;
     }
-    select, input[type="number"] {
-      width: 100%;
-      padding: 10px;
-      font-size: 0.95rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-family: inherit;
-      margin-bottom: 10px;
+
+    input,
+    select {
+      width: calc(100% - 10px); /* Ensures spacing from borders */
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid var(--secondaryColour);
+      border-radius: 5px;
+      margin-bottom: 15px; /* spacing between elements */
+      font-family: 'Poppins', sans-serif;
     }
-    .description {
-      font-size: 0.85rem;
-      color: #666;
-      margin-bottom: 15px;
-      line-height: 1.4;
+
+    input[type="number"] {
+      background: white;
+      color: black;
+      text-align: center;
+      font-weight: bold;
     }
 
     /* RADIO GROUP */
-    .radio-group {
-      margin-bottom: 20px;
-    }
-    .radio-option {
-      display: flex;
-      align-items: center;
-      margin-bottom: 8px;
+    .radio-group label {
+      font-size: 14px;
+      font-weight: 400;
+      display: inline-block;
+      margin-right: 20px;
       cursor: pointer;
     }
-    .radio-option input {
-      margin-right: 8px;
+    .radio-group input {
+      margin-right: 5px;
     }
 
-    /* RIGHT COL */
-    .right-col h2 {
-      font-size: 1.3rem;
-      margin-bottom: 20px;
-      color: #333;
-    }
-
-    /* SUMMARY TABLE */
-    .summary-table {
+    /* OUTPUT TABLE */
+    table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 10px;
+      margin-bottom: 15px;
     }
-    .summary-table thead {
-      background: #f2f2f2;
-    }
-    .summary-table th,
-    .summary-table td {
+    th, td {
+      border: 1px solid var(--secondaryColour);
       padding: 8px;
-      border-bottom: 1px solid #eee;
-      font-size: 0.95rem;
-    }
-    .summary-table th {
       text-align: left;
-      color: #333;
+      font-size: 14px;
     }
-    .summary-table td {
-      color: #444;
+    th {
+      background: var(--secondaryColour);
+      color: #fff;
+      font-weight: 600;
     }
 
     /* DOWNLOAD BUTTON */
     .download-btn {
-      display: inline-block;
-      padding: 12px 18px;
-      margin-top: 20px;
-      background: #00b163;
-      color: #fff;
+      display: block;
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #000;
+      background: var(--mainColour);
       border: none;
-      border-radius: 4px;
-      font-size: 0.95rem;
-      font-weight: 600;
+      border-radius: 5px;
+      text-align: center;
       cursor: pointer;
-      transition: background 0.3s ease;
+      margin-top: 20px;
     }
     .download-btn:hover {
-      background: #009a55;
+      background: #d2f048; /* Slightly lighter on hover */
     }
 
-    /* RESPONSIVE */
-    @media (max-width: 768px) {
-      .left-col, .right-col {
-        flex: 1 1 100%;
-        border-right: none;
-        border-bottom: 1px solid #ddd;
-      }
-      .right-col {
-        border-bottom: none;
-      }
+    .footer {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #666;
+      text-align: center;
     }
   </style>
 </head>
 <body>
 
-  <!-- PAGE INTRO / CONTEXT -->
-  <div class="page-intro">
-    <h1>Oil Leak Home Insurance Claim Calculator</h1>
-    <p><strong>Oil Leak And Underinsured?</strong><br/>
-       Your Home Insurance Coverage Affects Oil Leak Costs.
-       If your home is not fully insured, you'll have to cover some of the cost of Oil Leak remediations.
-    </p>
-    <p>At an industry standard rate of €220 per sq. foot, the costs can add up. Use our handy Oil Leak Insurance calculator below to estimate your coverage and costs.</p>
-    <p>Our team is here to assist you every step of the way. If you have questions regarding home insurance coverage and costs, contact us immediately for a consultation.</p>
-    <p><strong>The Hidden Risk for Irish Homeowners Facing Oil Leaks</strong><br/>
-       Most homeowners do not realize they are underinsured until they need to make a claim. By then, it is too late. This issue becomes even more serious when dealing with costly damages such as oil leaks from home heating tanks.
-    </p>
-    <p><strong>Why Are So Many Irish Homes Underinsured?</strong><br/>
-       1. Rising Construction Costs<br/>
-       2. Market Value vs. Rebuild Cost<br/>
-       3. Lack of Policy Updates<br/>
-       4. Underinsurance Penalties
-    </p>
-    <p><strong>The Risk of Oil Leaks</strong><br/>
-       One of the most expensive claims for homeowners in Ireland is a kerosene oil leak. Soil contamination, structural damage, water supply pollution, and environmental clean-ups can cost tens of thousands of euros.
-    </p>
-    <p><strong>How to Check If You Are Underinsured</strong><br/>
-       1. Calculate Your Rebuild Cost<br/>
-       2. Review Your Insurance Policy<br/>
-       3. Check Your Oil Tank Cover<br/>
-       4. Inspect Your Oil Tank
-    </p>
-    <p>Check your home insurance policy today and ensure you are fully covered before it is too late. If you are experiencing an oil leak and don't have full coverage, contact us to discuss your options.</p>
-  </div>
+  <!-- CALCULATOR -->
+  <div class="calculator">
+    <h2>Home Insurance Calculator</h2>
 
-  <!-- CALCULATOR WRAPPER -->
-  <div class="calculator-wrapper">
-    <!-- LEFT COLUMN (INPUTS) -->
-    <div class="left-col">
-      <h2>Rebuilding Costs for Insurance Purposes (2024/2025)</h2>
+    <!-- House Type -->
+    <label for="houseType">House type</label>
+    <select id="houseType">
+      <option value="-1">Select value</option>
+      <option value="0">Terraced; 2 bedrooms (typical size 78 sq. m)</option>
+      <option value="1">Terraced; 3 bedrooms (typical size 98 sq. m)</option>
+      <option value="2">Semi-detached; 3 bedrooms (typical size 98 sq. m)</option>
+      <option value="3">Semi-detached; 4 bedrooms (typical size 115 sq. m)</option>
+      <option value="4">Detached; 4 bedrooms (typical size 113 sq. m)</option>
+      <option value="5">Detached Bungalow; 4 bedrooms (typical size 137 sq. m)</option>
+    </select>
 
-      <!-- House Type -->
-      <label for="houseType">House type</label>
-      <select id="houseType">
-        <option value="-1">Select value</option>
-        <option value="0">Terraced; 2 bedrooms (typical size 78 sq. m)</option>
-        <option value="1">Terraced; 3 bedrooms (typical size 98 sq. m)</option>
-        <option value="2">Semi-detached; 3 bedrooms (typical size 98 sq. m)</option>
-        <option value="3">Semi-detached; 4 bedrooms (typical size 115 sq. m)</option>
-        <option value="4">Detached; 4 bedrooms (typical size 113 sq. m)</option>
-        <option value="5">Detached Bungalow; 4 bedrooms (typical size 137 sq. m)</option>
-      </select>
-      <div class="description">
-        The rebuilding rates are for speculatively built homes i.e. estate-type homes and should not be used for other house styles such as one-off homes in the countryside or period properties.
-      </div>
+    <!-- Floor Area -->
+    <label for="floorArea">Gross internal floor area (sq. m.)</label>
+    <input type="number" id="floorArea" min="1" max="10000" value="100" />
 
-      <!-- Gross internal floor area -->
-      <label for="floorArea">Gross internal floor area (sq. m.)</label>
-      <input
-        type="number"
-        id="floorArea"
-        value="100"
-        min="1"
-        max="10000"
-      />
-      <div class="description">
-        Calculate the internal area of your property by measuring the internal finish of the perimeter or party walls within the property, ignoring skirting boards, at each floor level. 
-        For multi-storey houses, if floors differ, calculate each storey and sum them.
-      </div>
-
-      <!-- Separate Garage -->
-      <div class="radio-group">
-        <label>Separate Garage</label>
-        <div class="description">
-          If your garage is part of the house, ensure it is included in the area above.
-        </div>
-        <label class="radio-option">
-          <input type="radio" name="garage" value="0" checked />
-          No Garage
-        </label>
-        <label class="radio-option">
-          <input type="radio" name="garage" value="22880" />
-          Single Car Garage
-        </label>
-        <label class="radio-option">
-          <input type="radio" name="garage" value="40928" />
-          Double Car Garage
-        </label>
-      </div>
-
-      <!-- Add For Higher Than Average -->
-      <label for="higherAverage">Add For Higher Than Average</label>
-      <input
-        type="number"
-        id="higherAverage"
-        value="0"
-        min="0"
-        max="1000000"
-      />
-      <div class="description">
-        Costs are based on an average fit out. If you have a 'Higher Than Average' fit out (e.g. premium kitchen, hardwood floors), add the additional amount here.
-      </div>
-
-      <!-- Additional Externals -->
-      <label for="externals">Additional Externals</label>
-      <input
-        type="number"
-        id="externals"
-        value="0"
-        min="0"
-        max="1000000"
-      />
-      <div class="description">
-        For any outbuildings, walls, or similar. Figures do allow for a path, driveway, re-grassing, and fencing. 
-      </div>
+    <!-- Separate Garage -->
+    <label>Separate Garage</label>
+    <div class="radio-group" id="garageOptions">
+      <label><input type="radio" name="garage" value="0" checked />No Garage</label>
+      <label><input type="radio" name="garage" value="22880" />Single Car Garage</label>
+      <label><input type="radio" name="garage" value="40928" />Double Car Garage</label>
     </div>
 
-    <!-- RIGHT COLUMN (SUMMARY) -->
-    <div class="right-col">
-      <h2>Total Summary</h2>
-      <table class="summary-table" id="summaryTable">
-        <thead>
-          <tr>
-            <th style="width:60%">Name</th>
-            <th style="width:40%">Total</th>
-          </tr>
-        </thead>
-        <tbody id="summaryBody">
-          <!-- Populated by JavaScript -->
-        </tbody>
-      </table>
+    <!-- Higher Than Average -->
+    <label for="higherAverage">Add For Higher Than Average</label>
+    <input type="number" id="higherAverage" min="0" max="1000000" value="0" />
 
-      <button class="download-btn" id="downloadPdfBtn">Download PDF</button>
+    <!-- Additional Externals -->
+    <label for="externals">Additional Externals</label>
+    <input type="number" id="externals" min="0" max="1000000" value="0" />
+
+    <!-- Output Table -->
+    <table id="summaryTable">
+      <thead>
+        <tr>
+          <th style="width: 60%;">Name</th>
+          <th style="width: 40%;">Value</th>
+        </tr>
+      </thead>
+      <tbody id="summaryBody">
+        <!-- Populated via JS -->
+      </tbody>
+    </table>
+
+    <!-- PDF BUTTON -->
+    <button class="download-btn" id="downloadPdfBtn">Download PDF</button>
+
+    <div class="footer">
+      Ensure you are not underinsured. Enter correct values to get more accurate results.
     </div>
   </div>
 
 <script>
-  /*****************************************
-   * HOUSE TYPE / COST DATA
-   *****************************************/
+  /********************************************
+   * Data + DOM
+   ********************************************/
   const houseTypeLabels = [
     "Terraced; 2 bedrooms (typical size 78 sq. m)",
     "Terraced; 3 bedrooms (typical size 98 sq. m)",
@@ -329,7 +204,6 @@
     "Detached Bungalow; 4 bedrooms (typical size 137 sq. m)"
   ];
 
-  // regionRates[regionName][houseTypeIndex] = cost-per-sq.m
   const regionRates = {
     "Dublin Region":     [3190, 3010, 3190, 3020, 3300, 2860],
     "Cork Region":       [2845, 2680, 2860, 2720, 2980, 2690],
@@ -340,25 +214,23 @@
     "North East Region": [2865, 2640, 2770, 2690, 2840, 2520]
   };
 
-  /*****************************************
-   * DOM ELEMENTS
-   *****************************************/
-  const houseTypeEl   = document.getElementById("houseType");
-  const floorAreaEl   = document.getElementById("floorArea");
-  const garageRadios  = document.getElementsByName("garage");
-  const higherAvgEl   = document.getElementById("higherAverage");
-  const externalsEl   = document.getElementById("externals");
-  const summaryBodyEl = document.getElementById("summaryBody");
-  const downloadBtn   = document.getElementById("downloadPdfBtn");
+  // DOM Elements
+  const houseTypeEl    = document.getElementById("houseType");
+  const floorAreaEl    = document.getElementById("floorArea");
+  const garageRadios   = document.getElementsByName("garage");
+  const higherAvgEl    = document.getElementById("higherAverage");
+  const externalsEl    = document.getElementById("externals");
+  const summaryBodyEl  = document.getElementById("summaryBody");
+  const downloadBtn    = document.getElementById("downloadPdfBtn");
 
-  /*****************************************
-   * CALCULATE & RENDER
-   *****************************************/
+  /********************************************
+   * Calculation & Rendering
+   ********************************************/
   function calculateAndRender() {
     const houseTypeIndex = parseInt(houseTypeEl.value, 10);
     const floorArea      = parseFloat(floorAreaEl.value) || 0;
-    const addHigher      = parseFloat(higherAvgEl.value) || 0;
-    const addExternals   = parseFloat(externalsEl.value) || 0;
+    const higherAvg      = parseFloat(higherAvgEl.value) || 0;
+    const externals      = parseFloat(externalsEl.value) || 0;
 
     let selectedGarageValue = 0;
     for (let i = 0; i < garageRadios.length; i++) {
@@ -368,53 +240,48 @@
       }
     }
 
+    // Clear table
     summaryBodyEl.innerHTML = "";
 
-    // House Type row
-    let houseTypeLabel = "N/A";
-    if (houseTypeIndex >= 0) {
-      houseTypeLabel = houseTypeLabels[houseTypeIndex];
-    }
+    // House Type
+    let houseTypeLabel = (houseTypeIndex >= 0) ? houseTypeLabels[houseTypeIndex] : "N/A";
     addRow("House Type", houseTypeLabel);
 
-    // Floor area
+    // Floor Area
     addRow("Gross internal floor area (sq. m.)", floorArea + " sq m");
 
     // Garage
     if (selectedGarageValue === 0) {
-      addRow("No Garage", "€ 0");
+      addRow("Separate Garage", "No Garage");
     } else {
-      const textGarage = (selectedGarageValue === 22880)
-        ? "Single Car Garage"
-        : "Double Car Garage";
-      addRow(textGarage, "€ " + formatNumber(selectedGarageValue));
+      const garageTxt = (selectedGarageValue === 22880) ? "Single Car Garage" : "Double Car Garage";
+      addRow("Separate Garage", garageTxt + " ( €" + formatNumber(selectedGarageValue) + " )");
     }
 
-    // Higher than average
-    addRow("Add For Higher Than Average", "€ " + formatNumber(addHigher));
+    // Higher Than Average
+    addRow("Add For Higher Than Average", "€" + formatNumber(higherAvg));
 
-    // Additional externals
-    addRow("Additional Externals", "€ " + formatNumber(addExternals));
+    // Additional Externals
+    addRow("Additional Externals", "€" + formatNumber(externals));
 
-    // If no valid house type, skip region costs
-    if (houseTypeIndex < 0) return;
-
-    // Calculate for each region
-    for (const [regionName, costs] of Object.entries(regionRates)) {
-      const rate = costs[houseTypeIndex]; 
-      const regionTotal = (rate * floorArea) + selectedGarageValue + addHigher + addExternals;
-      addRow(regionName, "€ " + formatNumber(regionTotal));
+    // Region calculations
+    if (houseTypeIndex >= 0) {
+      for (const [regionName, costs] of Object.entries(regionRates)) {
+        const rate   = costs[houseTypeIndex];
+        const regionTotal = (rate * floorArea) + selectedGarageValue + higherAvg + externals;
+        addRow(regionName, "€" + formatNumber(regionTotal));
+      }
     }
   }
 
-  function addRow(label, value) {
+  function addRow(name, val) {
     const tr = document.createElement("tr");
-    const tdLabel = document.createElement("td");
-    const tdValue = document.createElement("td");
-    tdLabel.textContent = label;
-    tdValue.textContent = value;
-    tr.appendChild(tdLabel);
-    tr.appendChild(tdValue);
+    const tdName = document.createElement("td");
+    const tdVal  = document.createElement("td");
+    tdName.textContent = name;
+    tdVal.textContent  = val;
+    tr.appendChild(tdName);
+    tr.appendChild(tdVal);
     summaryBodyEl.appendChild(tr);
   }
 
@@ -422,57 +289,108 @@
     return num.toLocaleString("en-IE", { minimumFractionDigits: 0 });
   }
 
-  /*****************************************
-   * PDF GENERATION
-   *****************************************/
+  /********************************************
+   * PDF Generation
+   ********************************************/
   async function downloadPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ unit: "pt", format: "a4" });
-    let yPos = 40;
 
-    // 1) Insert Enviroleak logo
-    //    We'll fetch the SVG as data, then embed. For cross-domain, we must handle CORS or base64.
-    //    For simplicity, let's do a quick fetch + convert to base64. If blocked by CORS, consider hosting a local copy.
-    const logoUrl = "https://www.enviroleak.ie/site/uploads/logo/logo.svg";
+    // Some base styling
+    doc.setFont("Poppins", "normal");
 
+    // Attempt to fetch your hosted logo (SVG)
+    const logoUrl = "https://raw.githubusercontent.com/boshify/home-insurance-calculator/main/logo.svg";
+
+    // Coordinates
+    let leftX = 40;
+    let topY  = 60;
+
+    // 1) Insert Enviroleak Logo
     try {
       const logoBase64 = await convertSvgToBase64(logoUrl);
-      // Add image to PDF (scaling to ~120px wide)
-      doc.addImage(logoBase64, "SVG", 40, yPos, 120, 40);
+      // We'll scale it to ~80 wide
+      doc.addImage(logoBase64, "SVG", leftX, 30, 80, 30);
     } catch (e) {
-      // fallback if there's a CORS block or error
+      // if CORS fails, skip logo
     }
-    yPos += 50;
 
-    doc.setFont("helvetica", "bold");
+    // 2) Title (right side or top)
     doc.setFontSize(14);
-    doc.text("Oil Leak Home Insurance Claim Calculator", 40, yPos);
-    yPos += 20;
-
-    doc.setFontSize(11);
-    doc.setFont("helvetica", "normal");
-    doc.text("Summary of your coverage and potential costs:", 40, yPos);
-    yPos += 25;
-
-    // 2) Gather table data
-    const rows = summaryBodyEl.querySelectorAll("tr");
-    rows.forEach((tr) => {
-      const cells = tr.querySelectorAll("td");
-      if (cells.length === 2) {
-        const label = cells[0].textContent.trim();
-        const val   = cells[1].textContent.trim();
-        doc.text(`${label}: ${val}`, 40, yPos);
-        yPos += 15;
-      }
+    doc.setFont(undefined, "bold");
+    doc.text("Calculation of House Rebuilding Costs for Insurance Purposes", 300, 45, {
+      maxWidth: 270,
     });
-    yPos += 20;
 
-    // 3) Insert Contact Info
-    doc.setFont("helvetica", "bold");
-    doc.text("Enviroleak Contact Info:", 40, yPos);
-    yPos += 18;
-    doc.setFont("helvetica", "normal");
-    const contactLines = [
+    doc.setFontSize(10);
+    doc.setFont(undefined, "normal");
+    doc.text(
+      "This document is a summary of the data provided as part of the Enviroleak Calculator.\nPlease ensure that the assumptions are applicable for the house type you are making a rebuild cost estimation for.",
+      300,
+      60,
+      { maxWidth: 270, lineHeightFactor: 1.4 }
+    );
+
+    // 3) Date/time
+    doc.setFontSize(9);
+    const now = new Date();
+    doc.text("Calculator Completed on: " + now.toLocaleString(), 300, 105);
+
+    // 4) "Assumptions" on the left column
+    doc.setFontSize(10);
+    doc.setFont(undefined, "bold");
+    doc.text("Assumptions", leftX, topY);
+    topY += 15;
+    doc.setFont(undefined, "normal");
+    const assumptionsText = [
+      "• The rebuilding rates are for speculatively built homes (i.e. estate-type homes).",
+      "• Figures are a MINIMUM base cost guide. Homeowners may add for better finishes.",
+      "• No allowance for outbuildings (unless added above).",
+      "• Figures allow for demolition costs, professional fees, and VAT.",
+      "• Professional fees include architects, surveyors, engineers, etc.",
+      "• House contents (furniture, carpets, etc.) are separate from building costs.",
+    ].join("\n");
+
+    const wrappedAssumptions = doc.splitTextToSize(assumptionsText, 220);
+    doc.text(wrappedAssumptions, leftX, topY, { lineHeightFactor: 1.4 });
+    // measure how far we got
+    const assumptionsHeight = wrappedAssumptions.length * 14;
+    const nextLeftColumnY   = topY + assumptionsHeight + 30;
+
+    // 5) Summary Table on the right column
+    // We'll gather the summary from the DOM
+    let summaryData = gatherSummaryData();
+    // We'll position the table at x=300, y=120
+    let tableX = 300;
+    let tableY = 120;
+
+    doc.setFont(undefined, "bold");
+    doc.text("Name", tableX, tableY);
+    doc.text("Option/Unit", tableX + 160, tableY);
+    doc.text("Value", tableX + 300, tableY);
+    doc.setDrawColor(0, 0, 0);
+    doc.setLineWidth(0.5);
+    // horizontal line under headings
+    doc.line(tableX, tableY + 5, tableX + 370, tableY + 5);
+
+    doc.setFont(undefined, "normal");
+    let rowY = tableY + 20;
+    summaryData.forEach((item) => {
+      doc.text(item.name, tableX, rowY);
+      doc.text(item.option, tableX + 160, rowY);
+      doc.text(item.value, tableX + 300, rowY);
+      rowY += 14;
+    });
+
+    // 6) Contact Info at bottom
+    let finalY = Math.max(nextLeftColumnY, rowY + 20);
+    if (finalY > 700) finalY = 700; // crude page limit
+
+    doc.setFont(undefined, "bold");
+    doc.text("Enviroleak Contact Info", leftX, finalY);
+    doc.setFont(undefined, "normal");
+    finalY += 14;
+    const contactText = [
       "info@enviroleak.ie",
       "",
       "Dublin Office:",
@@ -489,30 +407,61 @@
       "",
       "Carlow Office:",
       "Loughmartin Business Park, Bunclody Road, Tullow, Carlow, R93T6CD",
-      "(059) 9100464",
-      "",
-      "Need help with an Oil Leak Insurance Claim? Contact us today!"
+      "(059) 9100464"
     ];
-    contactLines.forEach(line => {
-      doc.text(line, 40, yPos);
-      yPos += 14;
-    });
+    doc.text(contactText, leftX, finalY, { lineHeightFactor: 1.3 });
 
-    // 4) Save
-    doc.save("enviroleak_cost_report.pdf");
+    // Save
+    doc.save("HomeInsuranceEstimate.pdf");
   }
 
-  // Utility: Convert external SVG to base64 (may fail if CORS not allowed)
+  // Utility to gather the same table data from the DOM
+  function gatherSummaryData() {
+    const data = [];
+    const rows = document.querySelectorAll("#summaryBody tr");
+    rows.forEach((tr) => {
+      const tds = tr.querySelectorAll("td");
+      if (tds.length === 2) {
+        // We'll break the first cell into "Name" & "Option/Unit" if relevant
+        const nameCell = tds[0].textContent.trim();
+        const valCell  = tds[1].textContent.trim();
+
+        // For the "Separate Garage" row, for example, we might parse out "No Garage"
+        // We'll do a simplistic approach: if the name is "House Type," the option is blank
+        let itemName = nameCell;
+        let itemOption = "";
+        // If nameCell is "Separate Garage" but the value says "Single Car Garage ( €22,880 )",
+        // we can split. We'll do a naive parse:
+        if (nameCell === "Separate Garage") {
+          itemOption = valCell.replace(/\(.*\)/, "").trim(); // remove the ( €22,880 ) part
+        } else if (nameCell === "House Type") {
+          itemOption = "";
+        } else if (nameCell === "Gross internal floor area (sq. m.)") {
+          itemOption = "sq. m.";
+        } else {
+          // For region rows or others, we can keep it blank or parse differently
+        }
+
+        data.push({
+          name: itemName,
+          option: itemOption,
+          value: valCell
+        });
+      }
+    });
+    return data;
+  }
+
+  // Utility: Convert external SVG to base64
   async function convertSvgToBase64(url) {
     const res = await fetch(url);
     const text = await res.text();
-    const svg64 = btoa(text);
-    return "data:image/svg+xml;base64," + svg64;
+    return "data:image/svg+xml;base64," + btoa(text);
   }
 
-  /*****************************************
-   * EVENT LISTENERS
-   *****************************************/
+  /********************************************
+   * Event Listeners
+   ********************************************/
   houseTypeEl.addEventListener("change", calculateAndRender);
   floorAreaEl.addEventListener("input", calculateAndRender);
   higherAvgEl.addEventListener("input", calculateAndRender);
@@ -522,7 +471,6 @@
   }
   downloadBtn.addEventListener("click", downloadPDF);
 
-  // Initial calc
   window.addEventListener("DOMContentLoaded", calculateAndRender);
 </script>
 </body>
